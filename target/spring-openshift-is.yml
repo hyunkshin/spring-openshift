@@ -10,6 +10,6 @@ items:
     tags:
     - from:
         kind: ImageStreamImage
-        name: spring-openshift@sha256:5ade5ed9358ae504c39deec512cb6998583439d3e30a87ee7ac56a587124dfcf
+        name: spring-openshift@sha256:08bb4f2e1241e236e5da4ba86290f4ce400f1a35fc27cfa5e5e32d339f78417a
         namespace: myproject
       name: latest

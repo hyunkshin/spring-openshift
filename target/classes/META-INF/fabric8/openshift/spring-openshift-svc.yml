@@ -3,9 +3,11 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
+    fabric8.io/git-commit: b7da2641b68c357010cac061e6caec48973e2bc6
     fabric8.io/iconUrl: img/icons/spring-boot.svg
-    prometheus.io/port: "9779"
+    fabric8.io/git-branch: master
     prometheus.io/scrape: "true"
+    prometheus.io/port: "9779"
   labels:
     expose: "true"
     app: spring-openshift

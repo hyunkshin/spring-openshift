@@ -18,9 +18,11 @@ items:
   kind: Service
   metadata:
     annotations:
+      fabric8.io/git-commit: b7da2641b68c357010cac061e6caec48973e2bc6
       fabric8.io/iconUrl: img/icons/spring-boot.svg
-      prometheus.io/port: "9779"
+      fabric8.io/git-branch: master
       prometheus.io/scrape: "true"
+      prometheus.io/port: "9779"
     labels:
       expose: "true"
       app: spring-openshift
@@ -42,7 +44,9 @@ items:
   kind: DeploymentConfig
   metadata:
     annotations:
+      fabric8.io/git-commit: b7da2641b68c357010cac061e6caec48973e2bc6
       fabric8.io/iconUrl: img/icons/spring-boot.svg
+      fabric8.io/git-branch: master
       fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=spring-openshift&var-version=0.0.1-SNAPSHOT
     labels:
       app: spring-openshift
@@ -64,7 +68,9 @@ items:
     template:
       metadata:
         annotations:
+          fabric8.io/git-commit: b7da2641b68c357010cac061e6caec48973e2bc6
           fabric8.io/iconUrl: img/icons/spring-boot.svg
+          fabric8.io/git-branch: master
           fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=spring-openshift&var-version=0.0.1-SNAPSHOT
         labels:
           app: spring-openshift
