@@ -1,0 +1,165 @@
+{
+  "apiVersion" : "v1",
+  "kind" : "List",
+  "items" : [ {
+    "apiVersion" : "v1",
+    "kind" : "Secret",
+    "metadata" : {
+      "labels" : {
+        "app" : "spring-openshift",
+        "provider" : "fabric8",
+        "version" : "0.0.1-SNAPSHOT",
+        "group" : "com.example.openshift"
+      },
+      "name" : "my-database-secret"
+    },
+    "stringData" : {
+      "user" : "luke",
+      "password" : "secret"
+    }
+  }, {
+    "apiVersion" : "v1",
+    "kind" : "Service",
+    "metadata" : {
+      "annotations" : {
+        "fabric8.io/iconUrl" : "img/icons/spring-boot.svg",
+        "prometheus.io/port" : "9779",
+        "prometheus.io/scrape" : "true"
+      },
+      "labels" : {
+        "expose" : "true",
+        "app" : "spring-openshift",
+        "provider" : "fabric8",
+        "version" : "0.0.1-SNAPSHOT",
+        "group" : "com.example.openshift"
+      },
+      "name" : "spring-openshift"
+    },
+    "spec" : {
+      "ports" : [ {
+        "name" : "http",
+        "port" : 8080,
+        "protocol" : "TCP",
+        "targetPort" : 8080
+      } ],
+      "selector" : {
+        "app" : "spring-openshift",
+        "provider" : "fabric8",
+        "group" : "com.example.openshift"
+      }
+    }
+  }, {
+    "apiVersion" : "v1",
+    "kind" : "Deployment",
+    "metadata" : {
+      "annotations" : {
+        "fabric8.io/iconUrl" : "img/icons/spring-boot.svg",
+        "fabric8.io/metrics-path" : "dashboard/file/kubernetes-pods.json/?var-project=spring-openshift&var-version=0.0.1-SNAPSHOT"
+      },
+      "labels" : {
+        "app" : "spring-openshift",
+        "provider" : "fabric8",
+        "version" : "0.0.1-SNAPSHOT",
+        "group" : "com.example.openshift"
+      },
+      "name" : "spring-openshift"
+    },
+    "spec" : {
+      "replicas" : 1,
+      "revisionHistoryLimit" : 2,
+      "selector" : {
+        "matchLabels" : {
+          "app" : "spring-openshift",
+          "provider" : "fabric8",
+          "group" : "com.example.openshift"
+        }
+      },
+      "template" : {
+        "metadata" : {
+          "annotations" : {
+            "fabric8.io/iconUrl" : "img/icons/spring-boot.svg",
+            "fabric8.io/metrics-path" : "dashboard/file/kubernetes-pods.json/?var-project=spring-openshift&var-version=0.0.1-SNAPSHOT"
+          },
+          "labels" : {
+            "app" : "spring-openshift",
+            "provider" : "fabric8",
+            "version" : "0.0.1-SNAPSHOT",
+            "group" : "com.example.openshift"
+          }
+        },
+        "spec" : {
+          "containers" : [ {
+            "env" : [ {
+              "name" : "MY_DATABASE_SERVICE_HOST",
+              "value" : "my-database.myproject.svc.cluster.local"
+            }, {
+              "name" : "MY_DATABASE_SERVICE_PORT",
+              "value" : "5432"
+            }, {
+              "name" : "DB_USERNAME",
+              "valueFrom" : {
+                "secretKeyRef" : {
+                  "key" : "user",
+                  "name" : "my-database-secret"
+                }
+              }
+            }, {
+              "name" : "DB_PASSWORD",
+              "valueFrom" : {
+                "secretKeyRef" : {
+                  "key" : "password",
+                  "name" : "my-database-secret"
+                }
+              }
+            }, {
+              "name" : "JAVA_OPTIONS",
+              "value" : "-Dspring.profiles.active=openshift"
+            }, {
+              "name" : "KUBERNETES_NAMESPACE",
+              "valueFrom" : {
+                "fieldRef" : {
+                  "fieldPath" : "metadata.namespace"
+                }
+              }
+            } ],
+            "image" : "",
+            "imagePullPolicy" : "IfNotPresent",
+            "livenessProbe" : {
+              "httpGet" : {
+                "path" : "/health",
+                "port" : 8080,
+                "scheme" : "HTTP"
+              },
+              "initialDelaySeconds" : 180
+            },
+            "name" : "spring-boot",
+            "ports" : [ {
+              "containerPort" : 8080,
+              "name" : "http",
+              "protocol" : "TCP"
+            }, {
+              "containerPort" : 9779,
+              "name" : "prometheus",
+              "protocol" : "TCP"
+            }, {
+              "containerPort" : 8778,
+              "name" : "jolokia",
+              "protocol" : "TCP"
+            } ],
+            "readinessProbe" : {
+              "httpGet" : {
+                "path" : "/health",
+                "port" : 8080,
+                "scheme" : "HTTP"
+              },
+              "initialDelaySeconds" : 10
+            },
+            "securityContext" : {
+              "privileged" : false
+            }
+          } ]
+        }
+      }
+    }
+  } ]
+}
